@@ -127,3 +127,18 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# include vscode workspace settings
+.vscode
+.vscode/*
+
+# include data
+.xls
+.xlsx
+.csv
+.rds
+.txt
+data/*
+
+# exclude ds_store
+.DS_Store
