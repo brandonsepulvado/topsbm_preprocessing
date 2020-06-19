@@ -104,3 +104,11 @@ def get_topic_counts(model_name, topic_level):
     # add informative name
     model_counts['topic_number'] = model_counts.index
     return model_counts.sort_values(by = 'n_docs', ascending = False)
+
+# function to estimate model
+def est_model(text_list, seed = 1234):
+    vec = CountVectorizer(token_pattern=r'\S+')
+    X = vec.fit_transform(text_list)
+    model = TopSBM(random_state = seed)
+    Xt = model.fit_transform(X)
+    return model
