@@ -26,9 +26,6 @@ abstracts = data_ethics['AB'].tolist()
 # # preprocess
 texts_0 = preprocess(abstracts, to_lower=True, rm_stops=False, rm_punct=True, lemmatize=False)
 
-# concatenate words 
-test = [' '.join(item) for item in texts_0]
-
 # prepare and estimate model
 vec = CountVectorizer(token_pattern=r'\S+')
 X = vec.fit_transform(test)
@@ -88,7 +85,6 @@ writer.save()
 
 # remove stops 
 texts_1 = preprocess(abstracts, to_lower=True, rm_stops=True, rm_punct=True, lemmatize=False)
-test = [' '.join(item) for item in texts_1]
 
 # estimate model
 vec = CountVectorizer(token_pattern=r'\S+')
@@ -150,7 +146,6 @@ writer.save()
 
 # remove stops 
 texts_2 = preprocess(abstracts, to_lower=True, rm_stops=True, rm_punct=True, lemmatize=True)
-test = [' '.join(item) for item in texts_2]
 
 # estimate model
 vec = CountVectorizer(token_pattern=r'\S+')
