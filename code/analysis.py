@@ -26,25 +26,20 @@ abstracts = data_ethics['AB'].tolist()
 # # preprocess
 texts_0 = preprocess(abstracts, to_lower=True, rm_stops=False, rm_punct=True, lemmatize=False)
 
-# prepare and estimate model
-vec = CountVectorizer(token_pattern=r'\S+')
-X = vec.fit_transform(test)
-model = TopSBM(random_state=1234)
-Xt = model.fit_transform(X)
+model_0 = est_model(texts_0)
 
 # get word probs per topic
-topics_model0_l1 = pd.DataFrame(model.groups_[1]['p_w_tw'], index=vec.get_feature_names())
-topics_model0_l0 = pd.DataFrame(model.groups_[0]['p_w_tw'], index=vec.get_feature_names())
-topics_model0_l2 = pd.DataFrame(model.groups_[2]['p_w_tw'], index=vec.get_feature_names())
+topics_model0_l1 = pd.DataFrame(model_0.groups_[1]['p_w_tw'], index=vec.get_feature_names())
+topics_model0_l0 = pd.DataFrame(model_0.groups_[0]['p_w_tw'], index=vec.get_feature_names())
+topics_model0_l2 = pd.DataFrame(model_0.groups_[2]['p_w_tw'], index=vec.get_feature_names())
 
 # plot
-model.state_.draw(layout='bipartite', subsample_edges=1000, hshortcuts=1, hide=0, hvertex_size=5, 
+model_0.state_.draw(layout='bipartite', subsample_edges=1000, hshortcuts=1, hide=0, hvertex_size=5, 
     output = '/home/brandon/Documents/topsbm_preprocessing/output/model_0.pdf')
 
 # get number of words and docs
-model.n_features_ # words : 11970
-model.n_samples_ # documents : 574
-# n_docs = len([v for v in model.graph_.vertices() if model.graph_.vp['kind'][v]==0])
+words_m0 = model_0.n_features_ # words : 11970
+docs_m0 = model_0.n_samples_ # documents : 574
 
 # get top 10 words for topics in level 0
 top_ten_model_0_l0 = []
@@ -87,10 +82,7 @@ writer.save()
 texts_1 = preprocess(abstracts, to_lower=True, rm_stops=True, rm_punct=True, lemmatize=False)
 
 # estimate model
-vec = CountVectorizer(token_pattern=r'\S+')
-X = vec.fit_transform(test)
-model = TopSBM(random_state=1234)
-Xt = model.fit_transform(X)
+model_1 = est_model(texts_1)
 
 # visually inspect
 model.state_.draw(layout='bipartite', subsample_edges=1000, hshortcuts=1, hide=0, hvertex_size=5, 
@@ -148,23 +140,20 @@ writer.save()
 texts_2 = preprocess(abstracts, to_lower=True, rm_stops=True, rm_punct=True, lemmatize=True)
 
 # estimate model
-vec = CountVectorizer(token_pattern=r'\S+')
-X = vec.fit_transform(test)
-model = TopSBM(random_state=1234)
-Xt = model.fit_transform(X)
+model_2 = est_model(texts_2)
 
 # visually inspect
-model.state_.draw(layout='bipartite', subsample_edges=1000, hshortcuts=1, hide=0, hvertex_size=5, 
+model_2.state_.draw(layout='bipartite', subsample_edges=1000, hshortcuts=1, hide=0, hvertex_size=5, 
     output = '/home/brandon/Documents/topsbm_preprocessing/output/model_2.pdf')
 
 # graph description
-model.n_features_ # 9698
-model.n_samples_ # 574
+words_m2 = model_2.n_features_ # 9698
+docs_m2 = model_2.n_samples_ # 574
 
 # get word probs for each level
-topics_model2_l1 = pd.DataFrame(model.groups_[1]['p_w_tw'], index=vec.get_feature_names())
-topics_model2_l0 = pd.DataFrame(model.groups_[0]['p_w_tw'], index=vec.get_feature_names())
-topics_model2_l2 = pd.DataFrame(model.groups_[2]['p_w_tw'], index=vec.get_feature_names())
+topics_model2_l1 = pd.DataFrame(model_2.groups_[1]['p_w_tw'], index=vec.get_feature_names())
+topics_model2_l0 = pd.DataFrame(model_2.groups_[0]['p_w_tw'], index=vec.get_feature_names())
+topics_model2_l2 = pd.DataFrame(model_2.groups_[2]['p_w_tw'], index=vec.get_feature_names())
 
 # get top 10 words for topics in level 0
 top_ten_model_2_l0 = []
