@@ -73,7 +73,7 @@ def preprocess(texts, to_lower=True, rm_stops=False, rm_punct=True, lemmatize=Fa
             texts[num] = ' '.join(doc_list)
 
     # split into list of lists
-    texts = [item.split() for item in texts]
+    # texts = [item.split() for item in texts]
 
     return texts
 
