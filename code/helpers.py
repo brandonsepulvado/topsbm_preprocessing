@@ -7,6 +7,10 @@ from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
 from spacy.lang.char_classes import CONCAT_QUOTES, LIST_ELLIPSES, LIST_ICONS
 from spacy.util import compile_infix_regex
 
+# fix stop word isue
+from spacy.attrs import IS_STOP
+nlp.vocab.add_flag(lambda s: s.lower() in spacy.lang.en.stop_words.STOP_WORDS, spacy.attrs.IS_STOP)
+
 # fix spacy tokenizer so does not split on hyphens
 
 # load large 
@@ -36,6 +40,8 @@ def preprocess(texts, to_lower=True, rm_stops=False, rm_punct=True, lemmatize=Fa
     # lowercase
     if (to_lower):
         texts = [elem.lower() for elem in texts]
+    else:
+        texts = texts
 
     # convert list of strings to list of docs
     if (rm_stops):
@@ -82,3 +88,19 @@ def run_sbmtm(text_object, seed=1234):
     gt.seed_rng(seed)  # seed for graph-tool's random number generator --> same results
     model.fit()
     return model
+
+# after sbm has been run, get the topic assignments based upon highest prob
+def get_topic_counts(model_name, topic_level):
+    # get topic by doc df
+    model_counts = pd.DataFrame(model_name.groups_[topic_level]['p_tw_d']).transpose()
+    # get doc id variable
+    model_counts['ident'] = model_counts.index
+    # convert to long format (n_docs was topic)
+    model_counts = model_counts.melt(id_vars=['ident'], var_name=['n_docs'])
+    # get doc-topic rows at max probability (can be ties)
+    idx = model_counts.groupby(['ident'])['value'].transform(max) == model_counts['value']
+    # throw out ones not among those rows and get counts
+    model_counts = model_counts[idx].n_docs.value_counts().to_frame()
+    # add informative name
+    model_counts['topic_number'] = model_counts.index
+    return model_counts.sort_values(by = 'n_docs', ascending = False)
