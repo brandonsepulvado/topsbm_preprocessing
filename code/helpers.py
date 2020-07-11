@@ -7,14 +7,14 @@ from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
 from spacy.lang.char_classes import CONCAT_QUOTES, LIST_ELLIPSES, LIST_ICONS
 from spacy.util import compile_infix_regex
 
+# load large 
+nlp = spacy.load("en_core_web_lg")
+
 # fix stop word isue
 from spacy.attrs import IS_STOP
 nlp.vocab.add_flag(lambda s: s.lower() in spacy.lang.en.stop_words.STOP_WORDS, spacy.attrs.IS_STOP)
 
 # fix spacy tokenizer so does not split on hyphens
-
-# load large 
-nlp = spacy.load("en_core_web_lg")
 
 # modify tokenizer infix patterns
 infixes = (
